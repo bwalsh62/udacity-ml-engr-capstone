@@ -1,15 +1,15 @@
 # Machine Learning Engineer Nanodegree
 ## Capstone Proposal
 Ben Walsh  
-January 9th, 2021
+January 24th, 2021
 
 ## Proposal
 
 ### Domain Background
 
-Music recommendation algorithms have powered the growing dominance of audio streaming applications, despite constantly changing content and the inherently subjective nature of any art. While established artists and engaged users may have enough historical data to enable a machine learning solution, there are challenges for an algorithm to predict the preferences for a new user or a new artist. Personal curation by a human is not scalable for a massive user base, so in order tor online applications to efficiently scale while growing engagement with users, an automated algorithm is critical.
+Music recommendation algorithms have powered the growing dominance of audio streaming applications, despite constantly changing content and the inherently subjective nature of any art. While established artists and engaged users can provide sufficient historical data to enable a machine learning solution, there are challenges for an algorithm to predict the preferences for a new user or a new artist. Personal curation by a human is not scalable for a massive user base, so in order for online applications to efficiently scale while growing engagement with users, an automated algorithm is critical.
 
-I have always been fascinated by the application of machine learning to music, and hope to use my newly acquired skills to explore this problem space. In particular I'm curious if song metadata provides enough information for reasonable predictions over a more involved audio processing approach which would be more computationally intensive.
+I have always been fascinated by the application of machine learning to music, and hope to use my newly acquired skills to explore this problem space. In particular I'm curious if song metadata provides enough information for reasonable predictions, instead of a more involved audio processing approach which would be more computationally intensive.
 
 ### Problem Statement
 
@@ -22,10 +22,10 @@ The datasets originate from a Kaggle competition: [WSDM - KKBox's Music Recommen
 The primary training data contains: 
 - msno: user id
 - song_id: song id
-- source_system_tab: the name of the tab where the event was triggered. 
-- source_screen_name: name of the layout a user sees.
+- source_system_tab: the name of the tab where the event was triggered
+- source_screen_name: name of the layout a user sees
 - source_type: an entry point a user first plays music on mobile apps
-- target: this is the target variable. target=1 means there are recurring listening event(s) triggered within a month after the user’s very first observable listening event, target=0 otherwise 
+- target: the target variable. target=1 means there are recurring listening event(s) triggered within a month after the user’s very first observable listening event, target=0 otherwise 
 
 Additional information on users are also available, which can be linked with msno (user id):
 - msno
@@ -45,14 +45,23 @@ Additional information on songs are also available, which can be linked with the
 - lyricist
 - language
 
-The primary information I plan on linking and expect to a performance driver is the genre_ids for each song. Secondary information I will explore and expect to increase performance are song:length, song:language, user:age
+The primary information I plan on linking and expect to a performance driver is the genre_ids for each song. Secondary information I will explore and expect to increase performance are song:length, song:language, user:city, and user:age.
 
 ### Solution Statement
-_(approx. 1 paragraph)_
 
-In this section, clearly describe a solution to the problem. The solution should be applicable to the project domain and appropriate for the dataset(s) or input(s) given. Additionally, describe the solution thoroughly such that it is clear that the solution is quantifiable (the solution can be expressed in mathematical or logical terms) , measurable (the solution can be measured by some metric and clearly observed), and replicable (the solution can be reproduced and occurs more than once).
+A full solution to the music recommendation challenge requires data cleaning, feature engineering, feature selection, and algorithm implementation. 
 
-I anticipate an unsupervised learning method will be helpful to categorize similar genres... and resulting in a genre_category variable with less unique entries than genre_id which will lead to better predictions
+#### Data Cleaning
+Tthe required approach is mostly unknown until I explore the data, but as an example, I would translate the time features into numeric variables if I use them. 
+
+#### Feature Engineering
+I anticipate an unsupervised learning method such as k-means clustering will be helpful to categorize similar genres into a new feature: genre_group, which will have less unique entries compared to genre_id and should  lead to better predictions. 
+
+#### Feature Selection 
+I will ensure only meaningful variables are input into an algorithm, removing variables such as IDs. 
+
+#### Algorithm Implementation 
+I will explore a few approaches to supervised learning with binary classification. I would like to start with a simpler, interpretable algorithm such as [logistic regression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html). I will also compare this with a popular, more powerful, but less (directly) interpretable algorithm like [XGBoost](https://xgboost.readthedocs.io/en/latest/python/python_intro.html). My final solution will be based off of hyper-parameter tuning each approach and comparing the aggregate accuracy on a test set. I'll also compare the training times and interpretability. 
 
 ### Benchmark Model
 

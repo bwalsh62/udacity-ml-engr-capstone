@@ -52,15 +52,19 @@ The primary information I plan on linking and expect to a performance driver is 
 A full solution to the music recommendation challenge requires data cleaning, feature engineering, feature selection, and algorithm implementation. 
 
 #### Data Cleaning
-Tthe required approach is mostly unknown until I explore the data, but as an example, I would translate the time features into numeric variables if I use them. 
+
+The required approach is mostly unknown until I explore the data, but as an example, I would fill in or remove any missing values.
 
 #### Feature Engineering
+
 I anticipate an unsupervised learning method such as k-means clustering will be helpful to categorize similar genres into a new feature: genre_group, which will have less unique entries compared to genre_id and should  lead to better predictions. 
 
 #### Feature Selection 
+
 I will ensure only meaningful variables are input into an algorithm, removing variables such as IDs. 
 
-#### Algorithm Implementation 
+#### Algorithm Implementation
+
 I will explore a few approaches to supervised learning with binary classification. I would like to start with a simpler, interpretable algorithm such as [logistic regression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html). I will also compare this with a popular, more powerful, but less (directly) interpretable algorithm like [XGBoost](https://xgboost.readthedocs.io/en/latest/python/python_intro.html). My final solution will be based off of hyper-parameter tuning each approach and comparing the aggregate accuracy on a test set. I'll also compare the training times and interpretability. 
 
 ### Benchmark Model
@@ -72,14 +76,51 @@ The top score on an unknown test set is 0.747, with the top 10% scoring at 0.692
 Since the highest performing submissions have unknown approaches, the upvoted notebooks will be a proxy to benchmark models. [This notebook](https://www.kaggle.com/terminate9298/music-recommandation-system) has been upvoted and has a respectable score of 0.68138 (most are not public), which is above the median. The algorithm in the notebook is from [LightGBM](https://lightgbm.readthedocs.io/en/latest/), a gradient boosting framework that uses tree based learning algorithms. Hyper-parameters in this solution to help compare to another tree-based approach are num_leaves: 108 and max_depth: 10.
 
 ### Evaluation Metrics
-_(approx. 1-2 paragraphs)_
 
-In this section, propose at least one evaluation metric that can be used to quantify the performance of both the benchmark model and the solution model. The evaluation metric(s) you propose should be appropriate given the context of the data, the problem statement, and the intended solution. Describe how the evaluation metric(s) are derived and provide an example of their mathematical representations (if applicable). Complex evaluation metrics should be clearly defined and quantifiable (can be expressed in mathematical or logical terms).
+My solution will be evaluted against the benchmark models by comparing the aggregate accuracy on a test set which the model has not trained on. In code:
+
+    num_correct = (test_predictions == test_truth).sum()
+    test_acc = num_correct / len(test_prediction)
+
 
 ### Project Design
 _(approx. 1 page)_
 
 In this final section, summarize a theoretical workflow for approaching a solution given the problem. Provide thorough discussion for what strategies you may consider employing, what analysis of the data might be required before being used, or which algorithms will be considered for your implementation. The workflow and discussion that you provide should align with the qualities of the previous sections. Additionally, you are encouraged to include small visualizations, pseudocode, or diagrams to aid in describing the project design, but it is not required. The discussion should clearly outline your intended workflow of the capstone project.
+
+My intended approach to the capstone project entails data exploration, data cleaning, feature engineering, feature selection, algorithm implementation, and model evaluation.
+
+#### Data Exploration
+
+To start the project, I'll want to explore the data. Importing the source file into `pandas` and using `.describe()` is a good start, summarizing each feature. Some visualization of feature distribution using `matplotlib.pyplot.hist` will also be helpful. As a result of this step, I expect to identify any features that need to be cleaned or removed. 
+
+#### Data Cleaning
+
+After data exploration, I expect to have to clean the data. The required approach is mostly unknown until I explore the data, but as an example, I would fill in or remove any missing values. With data imported as a dataframe in `pandas`, either of these could be achieved with `.fillna` or `.dropna` methods.
+
+#### Feature Engineering
+
+I anticipate an unsupervised learning method such as k-means clustering will be helpful to categorize similar genres into a new feature: genre_group, which will have less unique entries compared to genre_id and should  lead to better predictions. 
+
+scikitlearn PCA 
+
+Maybe month from date - extract YYYYMMDD
+
+#### Feature Selection 
+
+Will have to link all data together...
+using song ID...
+and genre ID...
+specifically pandas ... 
+
+I will ensure only meaningful variables are input into an algorithm, removing variables such as IDs. 
+
+`.drop([rows = msno, song_id, ...])
+
+#### Algorithm Implementation
+
+I will explore a few approaches to supervised learning with binary classification. I would like to start with a simpler, interpretable algorithm such as [logistic regression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html). I will also compare this with a popular, more powerful, but less (directly) interpretable algorithm like [XGBoost](https://xgboost.readthedocs.io/en/latest/python/python_intro.html). My final solution will be based off of hyper-parameter tuning each approach and comparing the aggregate accuracy on a test set. I'll also compare the training times and interpretability. 
+
 
 -----------
 

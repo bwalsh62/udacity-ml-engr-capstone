@@ -92,19 +92,15 @@ My intended approach to the capstone project entails data exploration, data clea
 
 #### Data Exploration
 
-To start the project, I'll want to explore the data. Importing the source file into `pandas` and using `.describe()` is a good start, summarizing each feature. Some visualization of feature distribution using `matplotlib.pyplot.hist` will also be helpful. As a result of this step, I expect to identify any features that need to be cleaned or removed. 
+To start the project, I'll want to explore the data. Importing the source file into `pandas` and using `.describe()` is a good start to summarize each feature. Some visualization of feature distribution using `matplotlib.pyplot.hist` will also be helpful. As a result of this step, I expect to identify any features that need to be cleaned or removed. 
 
 #### Data Cleaning
 
-After data exploration, I expect to have to clean the data. The required approach is mostly unknown until I explore the data, but as an example, I would fill in or remove any missing values. With data imported as a dataframe in `pandas`, either of these could be achieved with `.fillna` or `.dropna` methods.
+After data exploration, I expect to identify features that need to be cleaned. The required approach is mostly unknown until I explore the data, but as an example, I would fill in or remove any missing values. With data imported as a dataframe in `pandas`, methods such as `.fillna` or `.dropna` will be useful.
 
 #### Feature Engineering
 
-I anticipate an unsupervised learning method such as k-means clustering will be helpful to categorize similar genres into a new feature: genre_group, which will have less unique entries compared to genre_id and should  lead to better predictions. 
-
-scikitlearn PCA 
-
-Maybe month from date - extract YYYYMMDD
+In addition to the cleaned features, I expect additional engineered features will be valuable. For instance, genre_id is useful information, but clearly distinguishing each genre with individual IDs misses the intuition that certain genres are much more similar to each other than others. I anticipate an unsupervised learning method such as k-means clustering will be helpful to categorize similar genres into a new feature: genre_group, which will have less unique entries compared to genre_id and should  lead to better predictions. The library `sklearn.decomposition` includes a `PCA` library. I will explore a range of `n_components` to identify intuitive groupings. 
 
 #### Feature Selection 
 

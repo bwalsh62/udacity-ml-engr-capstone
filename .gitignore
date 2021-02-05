@@ -1,5 +1,6 @@
 # Saving data locally in workflow, omitting large files in GitHub
-data-input/*
+data-input-raw/*
+data-input-clean/*
 
 # Omitting temporary working files
 .ipynb_checkpoints/*

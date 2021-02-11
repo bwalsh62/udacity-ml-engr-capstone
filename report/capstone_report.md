@@ -1,7 +1,7 @@
 # Machine Learning Engineer Nanodegree
 ## Final Report
 Ben Walsh  
-February 7th, 2021
+February 14th, 2021
 
 ## Introduction
 
@@ -59,25 +59,60 @@ The solution is evaluted against the benchmark models by comparing the aggregate
 
 ## Implementation
 
-The full solution to the music recommendation challenge encompassed data cleaning, feature engineering, feature selection, and algorithm implementation. 
+The full solution to the music recommendation challenge encompassed data exploration, data cleaning, feature engineering, feature selection, and algorithm implementation. 
 
-#### Data Cleaning
+### Data Exploration
+
+The training data, member data, and song data were all received as separate files. Before merging into a single feature input, each dataset was explored.
+
+#### Training Data
+
+![](graphics/train_data_head.PNG)
+
+The raw training data exhibits ID columns `msno` and `song_id` that were used to link with the member and song data, respectively, then dropped from the feature list since the underlying values are not informative. The remaining columns contain string values, which motivated either dropping or one-hot encoding the variables into interpretable numerical inputs.
+
+#### Member Data
+
+![](graphics/member_data_head.PNG)
+
+The raw member data contains ID column `msno`, used to link with the raw training data. The `city` and `registered_via` values are numerical but categorical, which motivated one-hot encoding. The `bd` and `gender` values displayed unexpected values, with `gender` showing over 50% of data as `NaN`, and `bd` (age) values summarized below: 
+
+![](graphics/member_data_bd-age_describe.PNG)
+
+Seeing a negative minimum value and a maximum value of over 1000 motivated cleaning, where the outlier values were replaced with non-outlier mean.
+
+The time and date-based variables are correctly expressed as meaningful numerical values. 
+
+#### Song Data
+
+
+
+Explored the song data, and member data...
+Well-balanced target values in training set...
+Note on member gender data...
+Note on song genre data...
+Any visuals? Histograms on song language, user age, user city, ... 
+
+### Data Cleaning
 
 Details, example, pseudocode on data cleaning step
 
-#### Feature Engineering
+Drop NA values when possible - genre_ids
+Converting categorical variables to one-hot encoding - song language (or call this feature engineering?)
+
+### Feature Engineering
 
 Details, example, pseudocode on Feature Engineering step
 
 I anticipate an unsupervised learning method such as k-means clustering will be helpful to categorize similar genres into a new feature: genre_group, which will have less unique entries compared to genre_id and should  lead to better predictions. 
 
-#### Feature Selection 
+### Feature Selection 
 
 Details, example, pseudocode on Feature Selection step
 
-I will ensure only meaningful variables are input into an algorithm, removing variables such as IDs. 
+Only meaningful variables are input into an algorithm, removing variables such as IDs. 
 
-#### Algorithm Implementation
+### Algorithm Implementation
 
 I will explore a few approaches to supervised learning with binary classification. I would like to start with a simpler, interpretable algorithm such as [logistic regression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html). I will also compare this with a popular, more powerful, but less (directly) interpretable algorithm like [XGBoost](https://xgboost.readthedocs.io/en/latest/python/python_intro.html). My final solution will be based off of hyper-parameter tuning each approach and comparing the aggregate accuracy on a test set. I'll also compare the training times and interpretability. 
 

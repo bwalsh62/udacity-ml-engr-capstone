@@ -85,20 +85,27 @@ The time and date-based variables are correctly expressed as meaningful numerica
 
 #### Song Data
 
-
-
-Explored the song data, and member data...
+Explored the song data...
 Well-balanced target values in training set...
-Note on member gender data...
 Note on song genre data...
 Any visuals? Histograms on song language, user age, user city, ... 
 
 ### Data Cleaning
 
-Details, example, pseudocode on data cleaning step
+Details, example, pseudocode? on data cleaning step
 
-Drop NA values when possible - genre_ids
-Converting categorical variables to one-hot encoding - song language (or call this feature engineering?)
+#### Categorical Data
+
+language, city, registered_via, source_system_tab
+(add pseudocode for one-hot encoding?)
+
+#### Missing Data
+
+As identified in [Data Exploration - Member Data](####member-data), member `gender` has the majority of values missing. Gender is likely to be informative, so instead of dropping the entire feature, the missing values are converted to a `UNK` keyword. Then the three categories for gender are one-hot encoded into three separate features.
+
+#### Outliers
+
+As identified in [Data Exploration - Member Data](####member-data), member `bd` (age) has positive and negative outliers. The outlier values, defined as outside of 0 and 120 (years), are replaced with the mean value. The calculated mean of the non-outliers is approximately 28 years old. 
 
 ### Feature Engineering
 

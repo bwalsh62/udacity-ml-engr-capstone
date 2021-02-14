@@ -69,7 +69,7 @@ The training data, member data, and song data were all received as separate file
 
 ![](graphics/train_data_head.PNG)
 
-The raw training data exhibits ID columns `msno` and `song_id` that were used to link with the member and song data, respectively, then dropped from the feature list since the underlying values are not informative. The remaining columns contain string values, which motivated either dropping or one-hot encoding the variables into interpretable numerical inputs.
+The raw training data exhibits ID columns `msno` and `song_id` that were used to link with the member and song data, respectively, then dropped from the feature list since the underlying values are not informative. The remaining columns `source_system_tab`, etc. contain string values, which motivated either dropping or one-hot encoding the variables into interpretable numerical inputs.
 
 #### Member Data
 
@@ -90,14 +90,44 @@ Well-balanced target values in training set...
 Note on song genre data...
 Any visuals? Histograms on song language, user age, user city, ... 
 
+The raw song data contains ID column `song_id`, used to link with the raw training data. ... 
+
+The columns `artist_name`, etc. contain string values, which motivated either dropping or one-hot encoding the variables into interpretable numerical inputs.
+
+The numerical columns `genre_ids` and `language` are IDs, which motivated one-hot encoding into interpretable numerical inputs.
+
+The `song_length` is correctly expressed as a meaningful numerical value. 
+
 ### Data Cleaning
 
-Details, example, pseudocode? on data cleaning step
+In order for the raw input data to be suitable for machine learning algorithms, [categorical data](####categorical-data), missing data, and outliers all had to be addressed, as detailed below.
 
 #### Categorical Data
 
-language, city, registered_via, source_system_tab
+Several variables are encoded as numerical IDs and are categorical in nature. For machine learning algorithms to properly predict the ID, the values are one-hot encoded to new columns corresponding to each class. The following processing is applied:
+
+    def dataframe_one_hot_encode(dataframe, feature):
+        # Generate encoding
+        oh_encoding = pd.get_dummies(dataframe[feature])
+
+        # Concatenate new columns to dataframe
+        dataframe = pd.concat([dataframe, oh_encoding], axis=1)
+
+        # Drop original feature
+        dataframe = dataframe.drop(feature, axis=1)
+        
+        return dataframe
+
+As identified in [Data Exploration - Training Data](####training-data), `source_system_tab` is a categorical variable that is encoded in a string ID, and therefore was one-hot encoded.
+
+As identified in [Data Exploration - Song Data](####song-data), song `language` is a categorical variable that is encoded in a numerical ID, and therefore was one-hot encoded.
+
+As identified in [Data Exploration - Member Data](####member-data), member `city` is a categorical variable that is encoded in a numerical ID, and therefore was one-hot encoded.
+
+language, registered_via
 (add pseudocode for one-hot encoding?)
+
+As identified in ..... (insert hereeeeeee)
 
 #### Missing Data
 

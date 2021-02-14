@@ -5,3 +5,4 @@ saved_models/*
 
 # Omitting temporary working files
 .ipynb_checkpoints/*
+__pycache__/*

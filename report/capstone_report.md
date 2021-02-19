@@ -89,7 +89,7 @@ The raw training data exhibits ID columns `msno` and `song_id` that were used to
 
 ![](graphics/member_data_head.PNG)
 
-The raw member data contains ID column `msno`, used to link with the raw training data. The `city` and `registered_via` values are numerical but categorical, which motivated one-hot encoding. The `bd` and `gender` values displayed unexpected values, with `gender` showing over 50% of data as `NaN`, and `bd` (age) values summarized below: 
+The raw member data contains ID column `msno`, which is used to link with the raw training data. The `city` and `registered_via` values are numerical but categorical, which motivated one-hot encoding. The `bd` and `gender` values displayed unexpected values, with `gender` showing over 50% of data as `NaN`, and `bd` (age) values summarized below: 
 
 ![](graphics/member_data_bd-age_describe.PNG)
 
@@ -99,16 +99,13 @@ The time and date-based variables are correctly expressed as meaningful numerica
 
 #### Song Data
 
-Explored the song data...
-Well-balanced target values in training set...
-Note on song genre data...
-Any visuals? Histograms on song language, user age, user city, ... 
+![](graphics/song_data_head.PNG)
 
-The raw song data contains ID column `song_id`, used to link with the raw training data. ... 
+The raw song data contains ID column `song_id`, which is used to link with the raw training data. The numerical columns `genre_ids` and `language` are IDs, which motivated one-hot encoding into interpretable numerical inputs.
 
-The columns `artist_name`, etc. contain string values, which motivated either dropping or one-hot encoding the variables into interpretable numerical inputs.
+(show metrics or .describe() of artist_name, composer, lyricist)
 
-The numerical columns `genre_ids` and `language` are IDs, which motivated one-hot encoding into interpretable numerical inputs.
+The columns `artist_name`, `composer`, and `lyricist` contain string values with many unique classes. Since related intuitively useful information is encompassed in `language` and `genre_ids`, this motivated dropping these features.
 
 The `song_length` is correctly expressed as a meaningful numerical value. 
 
@@ -166,23 +163,56 @@ Additional features that were removed were `source_screen_name` and `source_type
 
 ### Baseline Model
 
-I will explore a few approaches to supervised learning with binary classification. I would like to start with a simpler, interpretable algorithm such as [logistic regression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html). 
+To establish a baseline for binary classification, a [logistic regression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html) model was created.
 
 ### Final Model
 
-I will also compare this with a popular, more powerful, but less (directly) interpretable algorithm like [XGBoost](https://xgboost.readthedocs.io/en/latest/python/python_intro.html). My final solution will be based off of hyper-parameter tuning each approach and comparing the aggregate accuracy on a test set. I'll also compare the training times and interpretability. 
+The final solution uses [XGBoost](https://xgboost.readthedocs.io/en/latest/python/python_intro.html), a popular optimized tree-based ensemble learning algorithm. After [hyper-parameter optimization](###optimization), the model parameters and performance are as follows:
 
-As is typical for Kaggle competitions, there is a [leaderboard](https://www.kaggle.com/c/kkbox-music-recommendation-challenge/leaderboard) displaying the top performing submissions and [notebooks](https://www.kaggle.com/c/kkbox-music-recommendation-challenge/notebooks) which can be upvoted for relevancy and usefulness. 
+Parameter | Value
+---|---
+test_accuracy | 0.637
+max_depth | 12
+n_estimators | 50
 
-The top score on an unknown test set is 0.747, with the top 10% scoring at 0.692 and a median submission of 0.671. While it is impossible to know how much experience the top submissions had and how much time they put into their solution, I hope I can at least generate a solution that would score in the top half, or above 0.671 on the test set. Specifically, I will compare my solution to benchmark performance by evaluating on a test set of many user-song pairs, resulting in a single aggregate percent correct.
+For reference, the top score on an unknown test set is 0.747, with the top 10% scoring at 0.692 and a median submission of 0.671. 
 
-Since the highest performing submissions have unknown approaches, the upvoted notebooks will be a proxy to benchmark models. [This notebook](https://www.kaggle.com/terminate9298/music-recommandation-system) has been upvoted and has a respectable score of 0.68138 (most are not public), which is above the median. The algorithm in the notebook is from [LightGBM](https://lightgbm.readthedocs.io/en/latest/), a gradient boosting framework that uses tree based learning algorithms. Hyper-parameters in this solution to help compare to another tree-based approach are num_leaves: 108 and max_depth: 10.
+[This notebook](https://www.kaggle.com/terminate9298/music-recommandation-system) has been upvoted and has a respectable score of 0.68138 (most are not public), which is above the median. The algorithm in the notebook is from [LightGBM](https://lightgbm.readthedocs.io/en/latest/), a gradient boosting framework that uses tree-based learning algorithms. Hyper-parameters in this solution are num_leaves: 108 and max_depth: 10.
 
 ### Optimization
+
+To aid model optimization, a simple model registry was created. The registry logs metadata for each model, creating a history to track what combination of hyper-parameters resulted in the best performance. In code:
+
+    hyper_params = { \
+    'objective': model.get_params()['objective'],
+    'colsample_bytree': model.get_params()['colsample_bytree'],
+    'learning_rate': model.get_params()['learning_rate'],
+    'max_depth': model.get_params()['max_depth'],
+    'alpha': model.get_params()['alpha'],
+    'n_estimators': model.get_params()['n_estimators']}
+
+    model_registry_info = { \
+    model_index : \
+    {\
+        'time': timestamp_str,
+        'data-features': list(X_train.columns.values),
+        'model-params': xgb_hyper_params,
+        'train-acc': train_acc, 
+        'test-acc': test_acc }
+  }
+
+The above example creates a log with a timestamp, input features, model hyper-parameters, and accuracy. 
+
+The primary hyper-parameters explored were:
+- **max_depth**: The maximum depth of any single tree 
+- **n_estimators**: Number of gradient boosted trees, or size of ensemble
+- **alpha**: The L1 regularization term, penalizing large feature weights
+
 ### Evaluation Metrics
 
-My solution is evaluated against the benchmark models by comparing the aggregate accuracy on a test set which the model has not trained on. In code:
+The solution is evaluated against the benchmark models by comparing the aggregate accuracy on a test set which the model has not trained on. In code:
 
+    test_predictions = model.predict(X_test)
     num_correct = (test_predictions == test_truth).sum()
     test_acc = num_correct / len(test_prediction)
 
@@ -190,7 +220,11 @@ My solution is evaluated against the benchmark models by comparing the aggregate
 
 ### Refinement
 
-Discussion on intermediate steps - what hyperparams were tuned, whaty were observations of how performance changed as data was processed
+By establishing a model registry early in development, changes in model hyper-parameters and input data were observed and logged. Many of the early improvements were realized from cleaning input data. Certain cleaning steps actually resulted in slight decreases in performance, but those are considered "lucky" that a non-sensical trend that the model learned happened to result in better performance. In these cases, cleaned features were kept since it is more intuitive and more likely to perform when deployed, even though it "hurt" performance.
+
+Additional performance gains were realized from hyper-parameter tuning. Generally, increasing max_depth and n_estimators had a positive effect on accuracy, with tradeoffs in training time and overfitting. Decreasing alpha had a positive effect on accuracy, with a tradeoff in overfitting since regularization had a smaller effect. In all cases, comparing accuracy between the training and test set mitigated the risk of overfitting. 
+
+While automatic hyper-parameter tuning methods such as [Grid Search Optimization](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html) were initially considered, steady progress from manual tuning coupled with computing memory constraints discouraged further exploration.
 
 ### Parameters
 

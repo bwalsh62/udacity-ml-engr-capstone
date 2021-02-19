@@ -145,9 +145,7 @@ As identified in [Data Exploration - Member Data](####member-data), member `bd` 
 
 ### Feature Engineering
 
-Details, example, pseudocode on Feature Engineering step
-
-I anticipate an unsupervised learning method such as k-means clustering will be helpful to categorize similar genres into a new feature: genre_group, which will have less unique entries compared to genre_id and should  lead to better predictions. 
+During the proposal, an anticipated engineered feature was `genre_group`, the result of an unsupervised learning method such as k-means clustering to categorize similar genres. The `genre_id` is intuitively useful, however one-hot encoding each genre as distinct classes misses the intuition that certain genres are much more similar to each other than others. However in practice, the input data contained no other information to create the clusters within genres, for instance descriptions of the genre or underlying audio features. To reduce the number of classes, the first digit of the ID was taken, assuming that the order is important. For instance, genres with IDs 101, 102, and 103, would all be categorized as 1. 
 
 ### Feature Selection 
 
@@ -163,7 +161,7 @@ Additional features that were removed were `source_screen_name` and `source_type
 
 ### Baseline Model
 
-To establish a baseline for binary classification, a [logistic regression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html) model was created.
+To establish a baseline for binary classification, a [logistic regression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html) model was created. The performance on a test set was 50.4%, or essentially the same as random chance.
 
 ### Final Model
 
@@ -228,22 +226,8 @@ While automatic hyper-parameter tuning methods such as [Grid Search Optimization
 
 ### Parameters
 
-How do hyperparams (e.g. size of tree) compare to benchmark?
+Compared to the upvoted LightGBM, the overall structure is of similar size. Although the algorithms are not directly comparable, `n_estimators` of 50 for XGBoost with a `max_depth` of 12 is of the same magnitude as the LightGBM solution's `num_leaves` of 108 and `max_depth` of 12. The performance is modestly lower, suggesting that futher data cleaning or hyper-parameter tuning may yield further performance benefit.
 
-### Conclusion
+## Conclusion
 
-Am I done? Justification when compared to benchmark
-
-### Project Design
-
-My intended approach to the capstone project entails data exploration, data cleaning, feature engineering, feature selection, algorithm implementation, and model evaluation.
-
-#### Feature Engineering
-
-In addition to the cleaned features, I expect additional engineered features will be valuable. For instance, genre_id is useful information, but clearly distinguishing each genre with individual IDs misses the intuition that certain genres are much more similar to each other than others. I expect an unsupervised learning method such as k-means clustering will be helpful to categorize similar genres into a new feature: genre_group, which will have less unique entries compared to genre_id and should  lead to better predictions. To implement the clustering, the library `sklearn.cluster` includes a `KMeans` library. I will explore a range of `n_clusters` to identify intuitive groupings. 
-
-#### Algorithm Implementation
-
-With clean feature data ready as input, I will explore a few approaches to the problem, which is a supervised learning, binary classification problem. I plan to start with a simpler, interpretable algorithm such as [logistic regression](https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.LogisticRegression.html) which is available in `sklearn` under `linear_model.LogisticRegression`. I will also compare this with a popular, more powerful, but less (directly) interpretable algorithm like [XGBoost](https://xgboost.readthedocs.io/en/latest/python/python_intro.html), which is available under the `xgboost` library. My final solution will be based off of hyper-parameter tuning each approach and comparing the aggregate accuracy on a test set. I'll also compare the training times and interpretability. 
-
-## Conclusions
+Overall, although the initial goal of matching a popular upvoted notebook was not achieved, performance is significantly greater than a baseline model. This capstone is considered a success, as model performance against an unseen problem space was achieved through successful implementation of data cleaning, feature selection, algorithm implementation, and hyper-parameter tuning.  
